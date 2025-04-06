@@ -1,0 +1,143 @@
+/* Home Component Styles */
+.home-container {
+  max-width: 800px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.upload-btn {
+  background-color: var(--success);
+  color: white;
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.upload-btn:hover {
+  background-color: var(--success-hover);
+  transform: translateY(-2px);
+}
+
+.clear-btn {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.clear-btn:hover {
+  background-color: var(--danger-hover);
+  transform: translateY(-2px);
+}
+
+.logout-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: var(--danger-hover);
+}
+
+.image-preview {
+  margin: 2rem auto;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 4px;
+}
+
+.image-info {
+  margin-top: 0.5rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.instruction {
+  color: #888;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .home-container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logout-btn {
+    position: static;
+    margin-bottom: 1rem;
+  }
+  
+  .image-preview {
+    margin: 1rem auto;
+    padding: 0.5rem;
+  }
+}
+
+/* Light Mode Adjustments */
+@media (prefers-color-scheme: light) {
+  .home-container {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-preview {
+    border-color: #eee;
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .image-info {
+    color: #666;
+  }
+  
+  .instruction {
+    color: #555;
+  }
+}

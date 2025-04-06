@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
+import './Home.css';
 
-const HomePage = () => {
+const HomePage = ({ onLogout }) => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -9,7 +10,6 @@ const HomePage = () => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -29,6 +29,10 @@ const HomePage = () => {
 
   return (
     <div className="home-container">
+      <button onClick={onLogout} className="logout-btn">
+        Logout
+      </button>
+      
       <h1>Image Uploader</h1>
       
       <div className="button-group">
