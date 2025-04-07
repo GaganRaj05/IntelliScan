@@ -17,8 +17,12 @@ export function AuthProvider({children}) {
         }
         fetchUser();
     },[]);
+    const value = {
+        user, 
+        setUser
+    }
     return (
-        <AuthContext.Provider value={{user,setUser}}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )

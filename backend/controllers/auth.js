@@ -17,7 +17,14 @@ async function handleLogin(req, res) {
             sameSite:"lax",
             path:"/"
         })
-        res.status(201).json("Login successfull");
+        const userData = {
+            id: user._id,
+            name: user.name,
+            email: user.email
+            
+        };
+
+        return res.status(201).json({message:"Login successfull", userData:userData});
     }   
     catch(err) {
         console.log(err.message);

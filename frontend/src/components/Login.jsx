@@ -3,8 +3,8 @@ import "./Login.css";
 import { handleLogin,handleRegistration } from "../Services/auth";
 import {useAuth} from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
-const Login = ({ onLoginSuccess }) => {
-  const {user, setUser} = useAuth();
+const Login = () => {
+  const  {user, setUser} = useAuth();
   const [isActive, setIsActive] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -44,6 +44,7 @@ const Login = ({ onLoginSuccess }) => {
           return;
         }
         alert("Login successfull");
+        setUser(response.userData);
         navigate("/home")
       }
     } else {
@@ -68,6 +69,7 @@ const Login = ({ onLoginSuccess }) => {
           return;
         }
         alert("Account created successfully, Please Sign in");
+        toggleForm()
         return;
       }
     }

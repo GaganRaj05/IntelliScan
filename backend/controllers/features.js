@@ -12,7 +12,7 @@ async function handleFileUpload(req, res) {
             headers:formData.getHeaders()
         });
         fs.unlinkSync(req.file.path);
-        return res.json(response.data.class);
+        return res.status(200).json(response.data.class);
     }
     catch(err) {
         console.log(err.message);
