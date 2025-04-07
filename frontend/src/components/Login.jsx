@@ -8,14 +8,17 @@ const Login = ({ onLoginSuccess }) => {
     loginPassword: '',
     registerUsername: '',
     registerEmail: '',
-    registerPassword: ''
+    registerPassword: '',
+    registerPhone: '',
+    registerAddress: '',
+    registerImage: null
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: files ? files[0] : value
     }));
   };
 
@@ -26,14 +29,24 @@ const Login = ({ onLoginSuccess }) => {
   const handleSubmit = (e, formType) => {
     e.preventDefault();
     if (formType === 'login') {
-      // Simple validation for demo
       if (formData.loginUsername && formData.loginPassword) {
         onLoginSuccess();
       }
     } else {
-      // Simple validation for demo
-      if (formData.registerUsername && formData.registerEmail && formData.registerPassword) {
-        onLoginSuccess();
+      if (formData.registerUsername && 
+          formData.registerEmail && 
+          formData.registerPassword && 
+          formData.registerPhone && 
+          formData.registerAddress) {
+        // Create FormData object for file upload
+        const registerData = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+          if (key.startsWith('register') && value) {
+            const fieldName = key.replace('register', '').toLowerCase();
+            registerData.append(fieldName, value);
+          }
+        });
+        onLoginSuccess(registerData);
       }
     }
   };
@@ -90,7 +103,7 @@ const Login = ({ onLoginSuccess }) => {
       {/* Register Form */}
       <div className="form-box register">
         <h2 className="title animation" style={{ '--i': 17, '--j': 0 }}>Sign Up</h2>
-        <form onSubmit={(e) => handleSubmit(e, 'register')}>
+        <form onSubmit={(e) => handleSubmit(e, 'register')} encType="multipart/form-data">
           <div className="input-box animation" style={{ '--i': 18, '--j': 1 }}>
             <input 
               type="text" 
@@ -127,9 +140,48 @@ const Login = ({ onLoginSuccess }) => {
             <i className='bx bxs-lock-alt'></i>
           </div>
 
-          <button type="submit" className="btn animation" style={{ '--i': 21, '--j': 4 }}>Sign Up</button>
+          <div className="input-box animation" style={{ '--i': 21, '--j': 4 }}>
+            <input 
+              type="tel" 
+              name="registerPhone"
+              value={formData.registerPhone}
+              onChange={handleChange}
+              required 
+              pattern="[0-9]{10,15}"
+              title="Please enter a valid phone number (10-15 digits)"
+            />
+            <label>Phone Number</label>
+            <i className='bx bxs-phone'></i>
+          </div>
 
-          <div className="linkTxt animation" style={{ '--i': 22, '--j': 5 }}>
+          <div className="input-box animation" style={{ '--i': 22, '--j': 5 }}>
+            <input 
+              type="text" 
+              name="registerAddress"
+              value={formData.registerAddress}
+              onChange={handleChange}
+              required 
+            />
+            <label>Address</label>
+            <i className='bx bxs-home'></i>
+          </div>
+
+          <div className="input-box file-input animation" style={{ '--i': 23, '--j': 6 }}>
+            <label className="file-label">
+              <input 
+                type="file" 
+                name="registerImage"
+                onChange={handleChange}
+                accept="image/*"
+              />
+              <span className="file-custom">{formData.registerImage ? formData.registerImage.name : 'Choose profile image...'}</span>
+              <i className='bx bxs-image'></i>
+            </label>
+          </div>
+
+          <button type="submit" className="btn animation" style={{ '--i': 24, '--j': 7 }}>Sign Up</button>
+
+          <div className="linkTxt animation" style={{ '--i': 25, '--j': 8 }}>
             <p>Already have an account? <a href="#" className="login-link" onClick={toggleForm}>Sign in</a></p>
           </div>
         </form>
