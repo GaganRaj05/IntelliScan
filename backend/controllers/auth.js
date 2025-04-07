@@ -28,14 +28,12 @@ async function handleLogin(req, res) {
 async function handleRegistration(req,res) {
     try {
         const {name,email,password,phone,address} = req.body;
+        console.log(name,email,password,phone,address)
         const emailExists = await User.findOne({email:email});
         if(emailExists) return res.status(401).json("Account exists.. Login");
 
         const phoneExists = await User.findOne({phone:phone});
         if(phoneExists) return res.status(401).json("Account exists.. Login");
-        const imagePath = req.file ? 
-        req.file.path.replace(/\\/g, '/').replace(/^uploads\//, '') : 
-        "default.jpg";
         const hashedPassword = await bcryptjs.hash(password,await bcryptjs.genSalt(10));
 
         await User.create({
@@ -44,7 +42,6 @@ async function handleRegistration(req,res) {
             password:hashedPassword,
             phone:phone,
             address:address,
-            image:imagePath
         })
         return res.status(201).json("Account created successfully");
 
@@ -70,4 +67,19 @@ async function handleLogout(req,res) {
         return res.status(501).json("Some error occured please try again later");
     }
 }
-module.exports = {handleLogin, handleRegistration, handleLogout};
+
+async function checkUserAuth(req, res) {
+    try {
+        const token = req.cookies.jwt;
+        if(!token) return res.status(400)
+        
+        const decoded = jsonwebtoken.verify(token,process.env.JWT_SECRET );
+        const user = await User.findOne({_id:decoded.id});
+        return res.status(200).json({id:user._id, name:user.name,email:user.email});
+    }
+    catch(err) {
+        console.log(err.message);  
+        return res.status(500).json("Some error occured please try again later");
+    }
+}
+module.exports = {handleLogin, handleRegistration, handleLogout, checkUserAuth};

@@ -7,10 +7,15 @@ const connectToDb = require("./config/db");
 const path = require("path")
 const authRoutes = require("./routes/auth")
 const featureRoutes = require("./routes/features")
+const cors = require('cors');
 const app = express();
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 app.use("/uploads",express.static(path.join(__dirname,"uploads"), {
     setHeaders: (res)=> {
         res.setHeaders("Cross-Origin-Resource-Policy","cross-origin")
