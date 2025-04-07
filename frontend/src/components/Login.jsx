@@ -38,7 +38,6 @@ const Login = ({ onLoginSuccess }) => {
           formData.registerPassword && 
           formData.registerPhone && 
           formData.registerAddress) {
-        // Create FormData object for file upload
         const registerData = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
           if (key.startsWith('register') && value) {
@@ -56,52 +55,7 @@ const Login = ({ onLoginSuccess }) => {
       <span className="rotate-bg"></span>
       <span className="rotate-bg2"></span>
 
-      {/* Login Form */}
       <div className="form-box login">
-        <h2 className="title animation" style={{ '--i': 0, '--j': 21 }}>Sign in</h2>
-        <form onSubmit={(e) => handleSubmit(e, 'login')}>
-          <div className="input-box animation" style={{ '--i': 1, '--j': 22 }}>
-            <input 
-              type="text" 
-              name="loginUsername"
-              value={formData.loginUsername}
-              onChange={handleChange}
-              required 
-            />
-            <label>Username</label>
-            <i className='bx bxs-user'></i>
-          </div>
-
-          <div className="input-box animation" style={{ '--i': 2, '--j': 23 }}>
-            <input 
-              type="password" 
-              name="loginPassword"
-              value={formData.loginPassword}
-              onChange={handleChange}
-              required 
-            />
-            <label>Password</label>
-            <i className='bx bxs-lock-alt'></i>
-          </div>
-          
-          <button type="submit" className="btn animation" style={{ '--i': 3, '--j': 24 }}>Sign in</button>
-          
-          <div className="linkTxt animation" style={{ '--i': 5, '--j': 25 }}>
-            <p>Don't have an account? <a href="#" className="register-link" onClick={toggleForm}>Sign Up</a></p>
-          </div>
-        </form>
-      </div>
-
-      {/* Login Info Text */}
-      <div className="info-text login">
-        <h2 className="animation" style={{ '--i': 0, '--j': 20 }}>Welcome Back!</h2>
-        <p className="animation" style={{ '--i': 1, '--j': 21 }}>
-          Please enter your credentials to access your account.
-        </p>
-      </div>
-
-      {/* Register Form */}
-      <div className="form-box register">
         <h2 className="title animation" style={{ '--i': 17, '--j': 0 }}>Sign Up</h2>
         <form onSubmit={(e) => handleSubmit(e, 'register')} encType="multipart/form-data">
           <div className="input-box animation" style={{ '--i': 18, '--j': 1 }}>
@@ -151,7 +105,7 @@ const Login = ({ onLoginSuccess }) => {
               title="Please enter a valid phone number (10-15 digits)"
             />
             <label>Phone Number</label>
-            <i className='bx bxs-phone'></i>
+            <i style={{color:"black"}} className='bx bxs-phone'></i>
           </div>
 
           <div className="input-box animation" style={{ '--i': 22, '--j': 5 }}>
@@ -188,12 +142,56 @@ const Login = ({ onLoginSuccess }) => {
       </div>
 
       {/* Register Info Text */}
-      <div className="info-text register">
+      <div className="info-text login">
         <h2 className="animation" style={{ '--i': 17, '--j': 0 }}>Welcome!</h2>
         <p className="animation" style={{ '--i': 18, '--j': 1 }}>
             Create an account to access exclusive features and content.
         </p>
       </div>
+
+      <div className="form-box register">
+        <h2 className="title animation" style={{ '--i': 0, '--j': 21 }}>Sign in</h2>
+        <form onSubmit={(e) => handleSubmit(e, 'login')}>
+          <div className="input-box animation" style={{ '--i': 1, '--j': 22 }}>
+            <input 
+              type="text" 
+              name="loginUsername"
+              value={formData.loginUsername}
+              onChange={handleChange}
+              required 
+            />
+            <label>Username</label>
+            <i className='bx bxs-user'></i>
+          </div>
+
+          <div className="input-box animation" style={{ '--i': 2, '--j': 23 }}>
+            <input 
+              type="password" 
+              name="loginPassword"
+              value={formData.loginPassword}
+              onChange={handleChange}
+              required 
+            />
+            <label>Password</label>
+            <i className='bx bxs-lock-alt'></i>
+          </div>
+          
+          <button type="submit" className="btn animation" style={{ '--i': 3, '--j': 24 }}>Sign in</button>
+          
+          <div className="linkTxt animation" style={{ '--i': 5, '--j': 25 }}>
+            <p>Don't have an account? <a href="#" className="register-link" onClick={toggleForm}>Sign Up</a></p>
+          </div>
+        </form>
+      </div>
+
+      {/* Login Info Text */}
+      <div className="info-text register">
+        <h2 className="animation" style={{ '--i': 0, '--j': 20 }}>Welcome Back!</h2>
+        <p className="animation" style={{ '--i': 1, '--j': 21 }}>
+          Please enter your credentials to access your account.
+        </p>
+      </div>
+
     </div>
   );
 };
