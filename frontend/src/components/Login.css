@@ -2,7 +2,7 @@
 .wrapper {
   position: relative;
   width: 750px;
-  height: 450px;
+  height: 600px; /* Increased height */
   background: var(--white);
   border: 2px solid var(--black);
   border-radius: 10px;
@@ -49,7 +49,7 @@
   position: relative;
   width: 100%;
   height: 50px;
-  margin: 25px 0;
+  margin: 20px 0; /* Reduced margin */
 }
 
 .input-box input {
@@ -102,6 +102,40 @@
   color: var(--lightBlue);
 }
 
+/* File input styles */
+.input-box.file-input {
+  height: auto;
+  padding-top: 15px;
+}
+
+.file-label {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.file-custom {
+  display: block;
+  padding: 8px 0;
+  color: var(--black);
+  border-bottom: 2px solid var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-input i {
+  top: 35px;
+}
+
+input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
 form button {
   width: 100%;
   height: 45px;
@@ -114,6 +148,7 @@ form button {
   font-size: 16px;
   font-weight: 600;
   transition: .3s;
+  margin-top: 10px;
 }
 
 form button:hover {
@@ -124,7 +159,7 @@ form .linkTxt {
   font-size: 14px;
   color: var(--black);
   text-align: center;
-  margin: 20px 0 10px;
+  margin: 15px 0 10px;
 }
 
 .linkTxt p a {
@@ -279,7 +314,7 @@ form .linkTxt {
   .wrapper {
     width: 95%;
     height: auto;
-    min-height: 500px;
+    min-height: 600px;
   }
   
   .wrapper .form-box.login {
