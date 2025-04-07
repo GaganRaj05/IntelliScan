@@ -1,143 +1,143 @@
-/* Home Component Styles */
+/* Home Page Styles */
 .home-container {
   max-width: 800px;
-  width: 90%;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
-  position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
 }
 
-.button-group {
+.header {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin: 2rem 0;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
-.upload-btn {
-  background-color: var(--success);
-  color: white;
-  border: none;
-  padding: 0.6em 1.2em;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-
-.upload-btn:hover {
-  background-color: var(--success-hover);
-  transform: translateY(-2px);
-}
-
-.clear-btn {
-  background-color: var(--danger);
-  color: white;
-  border: none;
-  padding: 0.6em 1.2em;
-  border-radius: 8px;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-
-.clear-btn:hover {
-  background-color: var(--danger-hover);
-  transform: translateY(-2px);
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #9117e9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: fixed;
+  top: 0;
+  left: 5;
 }
 
 .logout-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--danger);
+  background-color: #f44336;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s;
+  position:absolute;
+  top: 0;
+  right: 0;
 }
 
 .logout-btn:hover {
-  background-color: var(--danger-hover);
+  background-color: #b9f40a;
 }
 
-.image-preview {
-  margin: 2rem auto;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 8px;
-  max-width: 600px;
-  background: rgba(255, 255, 255, 0.1);
+.logo {
+  position: fixed;  /* Fixes the logo to the top left corner */
+  top: 0;           /* Aligns the top edge of the logo with the top of the viewport */
+  left: 0;          /* Aligns the left edge of the logo with the left of the viewport */
+  width: 80px;      /* Sets the width of the logo */
+  height: 80px;     /* Sets the height of the logo */
 }
 
-.image-preview img {
-  max-width: 100%;
-  max-height: 400px;
+.content {
+  text-align: center;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  color: #f56d6d;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.upload-section {
+  margin-bottom: 2rem;
+}
+
+.upload-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
   border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.image-info {
-  margin-top: 0.5rem;
-  color: #aaa;
-  font-size: 0.9rem;
+.upload-btn:hover {
+  background-color: #388E3C;
+  transform: translateY(-2px);
 }
 
 .instruction {
-  color: #888;
+  color: #666;
   font-style: italic;
   margin-top: 1rem;
 }
 
-/* Responsive Adjustments */
+.image-preview {
+  margin: 2rem auto;
+  max-width: 600px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-actions {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.clear-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.clear-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .home-container {
-    width: 95%;
     padding: 1.5rem;
   }
   
-  .button-group {
+  .header {
     flex-direction: column;
-    align-items: center;
+    gap: 1rem;
   }
   
-  .logout-btn {
-    position: static;
-    margin-bottom: 1rem;
+  .app-title {
+    font-size: 1.3rem;
   }
   
-  .image-preview {
-    margin: 1rem auto;
-    padding: 0.5rem;
-  }
-}
-
-/* Light Mode Adjustments */
-@media (prefers-color-scheme: light) {
-  .home-container {
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-preview {
-    border-color: #eee;
-    background: rgba(255, 255, 255, 0.8);
-  }
-  
-  .image-info {
-    color: #666;
-  }
-  
-  .instruction {
-    color: #555;
+  .page-title {
+    font-size: 1.5rem;
   }
 }
