@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import './Login.css';
 
-
-const LoginForm = () => {
+const Login = ({ onLoginSuccess }) => {
   const [isActive, setIsActive] = useState(false);
   const [formData, setFormData] = useState({
     loginUsername: '',
@@ -26,16 +26,15 @@ const LoginForm = () => {
   const handleSubmit = (e, formType) => {
     e.preventDefault();
     if (formType === 'login') {
-      console.log('Login data:', {
-        username: formData.loginUsername,
-        password: formData.loginPassword
-      });
+      // Simple validation for demo
+      if (formData.loginUsername && formData.loginPassword) {
+        onLoginSuccess();
+      }
     } else {
-      console.log('Register data:', {
-        username: formData.registerUsername,
-        email: formData.registerEmail,
-        password: formData.registerPassword
-      });
+      // Simple validation for demo
+      if (formData.registerUsername && formData.registerEmail && formData.registerPassword) {
+        onLoginSuccess();
+      }
     }
   };
 
@@ -44,7 +43,7 @@ const LoginForm = () => {
       <span className="rotate-bg"></span>
       <span className="rotate-bg2"></span>
 
-      {/* signin Form */}
+      {/* Login Form */}
       <div className="form-box login">
         <h2 className="title animation" style={{ '--i': 0, '--j': 21 }}>Sign in</h2>
         <form onSubmit={(e) => handleSubmit(e, 'login')}>
@@ -72,7 +71,7 @@ const LoginForm = () => {
             <i className='bx bxs-lock-alt'></i>
           </div>
           
-          <button type="submit" className="btn animation" style={{ '--i': 3, '--j': 24 }}>sign in</button>
+          <button type="submit" className="btn animation" style={{ '--i': 3, '--j': 24 }}>Sign in</button>
           
           <div className="linkTxt animation" style={{ '--i': 5, '--j': 25 }}>
             <p>Don't have an account? <a href="#" className="register-link" onClick={toggleForm}>Sign Up</a></p>
@@ -147,4 +146,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;
