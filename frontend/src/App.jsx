@@ -1,11 +1,11 @@
 import 'boxicons/css/boxicons.min.css';
-import Login from "./components/login";
+import LoginForm from './components/Login';
 // import HomePage from './pages/Home';
 
 const App = () => {
     return (
         <div>
-            <Login/>
+            <LoginForm/>
             {/* <HomePage/> */}
         </div>
     )
