@@ -102,7 +102,7 @@ Body: { "image": "base64_encoded_mri_image" }
 ---
 
 ## **📜 License**  
-*(Add license later, e.g., MIT, Apache)*  
+*This project is not licensed as of this day*  
 
 ---
 
