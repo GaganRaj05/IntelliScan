@@ -78,7 +78,7 @@ async function handleLogout(req,res) {
 async function checkUserAuth(req, res) {
     try {
         const token = req.cookies.jwt;
-        if(!token) return res.status(400)
+        if(!token) return res.status(400).json("Not logged in...");
         
         const decoded = jsonwebtoken.verify(token,process.env.JWT_SECRET );
         const user = await User.findOne({_id:decoded.id});

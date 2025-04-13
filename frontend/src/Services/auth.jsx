@@ -1,12 +1,9 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-async function handleLogin(formData) {
-    try{
-        const response = await fetch(`${BACKEND_URL}/auth/sign-in`,{
-            method:"POST",
-            headers:{"Content-type":"application/json"},
-            body:JSON.stringify(formData),
-            credentials:'include'
-        })
+async function checkAuth() {
+    try {
+        const respone = await fetch(`${BACKEND_URL}/auth/check-auth`, {
+            credentials:'include',
+            method:'GET',
+        });
         const data = await response.json();
         if(!response.ok) return {error:data};
         return data;
@@ -17,37 +14,13 @@ async function handleLogin(formData) {
     }
 }
 
-async function handleRegistration(formData) {
-    try {
-        const response = await fetch(`${BACKEND_URL}/auth/sign-up`,{
-            method:"POST",
-            credentials:"include",
-            headers:{"Content-type":"application/json"},
-            body:JSON.stringify(formData),
-        });
-        const data = await response.json();
-        if(!response.ok) return {error:data};
-        return data;
-    }
-    catch(err) {
-        console.log(err.message);
-        return {error:err.message};
-    }
-}
-async function handleLogout() {
-    try {
-        const response = await fetch(`${BACKEND_URL}/auth/sign-out`,{
-            method:"POST",
-            credentials:"include",
-        });
-        const data = response.json();
-        if(!response.ok) return {error:data};
-        return data
-    }
-    catch(err) {
-        console.log(err.message);
-        return {error:err.message};
-    }
-}
+async function signIn() {
 
-export {handleLogin, handleLogout, handleRegistration};
+}
+async function signUp() {
+
+}
+async function signOut() {
+
+}
+export {checkAuth, signIn, signUp, signOut};

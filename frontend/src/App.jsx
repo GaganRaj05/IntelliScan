@@ -1,27 +1,13 @@
-import 'boxicons/css/boxicons.min.css';
-import Login from "./components/Login";
-import HomePage from './pages/Home';
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { useState } from 'react'
+import Router from './routes/Router'
 
-const router = createBrowserRouter([
-  {
-    path:"/",
-    element:<Login/>
-  },
-  {
-    path:"/home",
-    element:<HomePage/>
-  }
-  
-])
-
-
-const App = () => {
-  
+function App() {
 
   return (
-    <RouterProvider router={router}/>
-  );
-};
+    <div className='app'>
+    <Router/>
+    </div>
+  )
+}
 
-export default App;
+export default App

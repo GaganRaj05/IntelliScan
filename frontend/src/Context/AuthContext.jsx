@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, createContext } from "react"
-import checkAuth from "../Services/checkAuth";
+import { createContext, useContext, useEffect, useState } from "react";
+import { checkAuth } from "../services/auth";
 const AuthContext = createContext();
 
 export function AuthProvider({children}) {
@@ -8,8 +8,7 @@ export function AuthProvider({children}) {
     useEffect(()=> {
         async function fetchUser() {
             const response = await checkAuth();
-            console.log(response)
-            if(response.error ){
+            if(response.error) {
                 setUser(null);
                 return;
             }
@@ -17,17 +16,17 @@ export function AuthProvider({children}) {
         }
         fetchUser();
     },[]);
-    const value = {
-        user, 
-        setUser
-    }
+
+    useEffect(()=> {
+        console.log("Current user: ", user);
+    },[user])
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{user, setUser}}>
             {children}
         </AuthContext.Provider>
     )
 }
 
 export function useAuth() {
-    return useContext(AuthContext);
+    const context = useContext(AuthContext);
 }
