@@ -1,6 +1,56 @@
 .navbar-container {
     height: 60px;
     width: 100%;
-    background-color: black;
     margin: 0;
+    padding: 0;
+    border: 0;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+.navbar-container nav {
+    height: 100%;
+    width: 100%;
+    position: sticky;
+}
+.navbar-container nav ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 0;
+
+}
+.nav-item {
+    list-style-type: none;
+}
+.nav-logo {
+    height: 50px;
+    width: 130px;
+    margin-left: 50px;
+}
+.nav-btn {
+    height: 35px;
+    width: 130px;
+    margin-right: 15px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+.contact {
+    margin-right: 50px;
+    color: white;
+    border: 0;
+    background-color: #192134;
+}
+.nav-btn:hover {
+    background-color: #e8e8e8;
+}
+.contact:hover {
+    background-color: #e8e8e8;
+    color: black;
 }
