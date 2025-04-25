@@ -2,6 +2,7 @@ import Button from "../../ui/Button";
 import "./HeroSection.css";
 import HeroImg from "./hero.jpg";
 import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
 const Hero = () => {
     const navigate = useNavigate();
     return (
@@ -18,7 +19,7 @@ const Hero = () => {
                     <p className="hero-cont-descript">
                         We have built a solution that generate actionable insights from radiology images to help users to make more informed diagnostic and treatment decisions
                     </p>
-                    <Button classname={"contact nav-btn"} onClick={()=>navigate("/")}>
+                    <Button classname={"contact nav-btn"} onClick={()=>toast.error("This feature is yet to be added")}>
                         Contact us
                     </Button>
                 </div>

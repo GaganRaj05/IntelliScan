@@ -10,4 +10,4 @@ const HomePageSection = ()=> {
         </>
     )
 }
-export default HomePageSection
+export default HomePageSection;

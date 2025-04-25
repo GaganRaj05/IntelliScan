@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "../pages/HomePage";
-
+import UploadMriImagesPage from "../pages/UploadMRIiMage";
+import ImageResultsPage from "../pages/ImageResults";
 const router = createBrowserRouter([
     {
         path:"/",
@@ -9,6 +10,14 @@ const router = createBrowserRouter([
     {
         path:"/login",
         element:<HomePage/>
+    },
+    {
+        path:"/upload-mri-images",
+        element:<UploadMriImagesPage/>
+    },
+    {
+        path:"/upload-mri-images/results",
+        element:<ImageResultsPage/>
     }
 ])
 

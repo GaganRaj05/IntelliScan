@@ -1,0 +1,44 @@
+.result-container {
+
+    max-width: 500px;
+    margin: 200px auto;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .result-container h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  
+  .result-container h3 {
+    margin-top: 24px;
+    font-size: 18px;
+    color: #444;
+  }
+  
+  .result-container p {
+    margin: 8px 0;
+    font-size: 16px;
+  }
+  
+  .result-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .result-container li {
+    margin: 6px 0;
+    background-color: #e0e0e0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+  }
+  
