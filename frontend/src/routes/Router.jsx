@@ -1,16 +1,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomePage from "../pages/HomePage";
 import UploadMriImagesPage from "../pages/UploadMRIiMage";
 import ImageResultsPage from "../pages/ImageResults";
+
+import Landing from "../pages/Landing";
 const router = createBrowserRouter([
     {
         path:"/",
-        element:<HomePage/>
+        element:<Landing/>
     },
-    {
-        path:"/login",
-        element:<HomePage/>
-    },
+    
     {
         path:"/upload-mri-images",
         element:<UploadMriImagesPage/>

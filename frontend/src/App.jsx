@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="app">
       <Router />
-      <ToastContainer position="top-center" autoClose={3000} />
+      <ToastContainer position="top-center" autoClose={3000} theme="dark" />
     </div>
   );
 }

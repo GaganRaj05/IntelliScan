@@ -1,6 +1,48 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  font: inherit;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.btn--sm { height: 34px; padding: 0 16px; font-size: 0.9375rem; }
+.btn--md { height: 44px; padding: 0 22px; font-size: 1.0625rem; }
+.btn--lg { height: 52px; padding: 0 30px; font-size: 1.1875rem; }
+
+.btn--primary { background: var(--accent-fill); color: #fff; }
+.btn--primary:hover { background: var(--accent-fill-hover); }
+
+.btn--glass {
+  background: var(--glass-bg);
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+.btn--glass:hover { background: rgba(255, 255, 255, 0.14); }
+
+.btn--link {
+  height: auto;
+  padding: 0 2px;
+  background: none;
+  color: var(--accent);
+}
+.btn--link:hover { text-decoration: underline; }
+
+/* Legacy class kept so any page still using it doesn't break. */
 .upload-btn {
-    background-color:#000000 ;
-    color: white;
-    margin-left: 160px;
-    margin-top: 5px;
+  background-color: #000000;
+  color: white;
+  margin-left: 160px;
+  margin-top: 5px;
 }

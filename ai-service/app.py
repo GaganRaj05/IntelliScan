@@ -6,6 +6,7 @@ import io
 import tensorflow as tf
 import logging
 import sys
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +24,7 @@ app.add_middleware(
 )
 
 # Load model
-model = tf.keras.models.load_model(r'D:\IntelliScan\ai-model\brain_tumor_model.keras')
+model = tf.keras.models.load_model(r'D:\IntelliScan\ai-model\brain_tumor_model_updated.keras')
 
 def preprocess_image(image_bytes):
     try:
@@ -55,36 +56,50 @@ CLASSES = ['glioma_tumor', 'meningioma_tumor', 'pituitary_tumor', 'no_tumor']
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    if not file.content_type.startswith('image/'):
+    if not file.content_type or not file.content_type.startswith('image/'):
         raise HTTPException(status_code=400, detail="File must be an image")
-    
+
     try:
         contents = await file.read()
-        
-        image = Image.open(io.BytesIO(contents)).convert('RGB')  
-        image = image.resize(IMG_SIZE)
-        
-        img_array = np.array(image) / 255.0
+
+        if not contents:
+            raise HTTPException(status_code=400, detail="Empty image file")
+
+        image = Image.open(io.BytesIO(contents)).convert('RGB')
+        image = image.resize(IMG_SIZE, Image.Resampling.BILINEAR)
+
+        img_array = np.array(image, dtype=np.float32)
+        img_array = preprocess_input(img_array)
         img_array = np.expand_dims(img_array, axis=0)
-        
-        logging.info(f"Input array - min: {img_array.min()}, max: {img_array.max()}, shape: {img_array.shape}")
-        
-        prediction = model.predict(img_array)
+
+        logging.info(
+            f"Input array - min: {img_array.min()}, max: {img_array.max()}, shape: {img_array.shape}"
+        )
+
+        prediction = model.predict(img_array, verbose=0)
+
         logging.info(f"Raw prediction: {prediction}")
-        
+
         predicted_class_idx = np.argmax(prediction, axis=1)[0]
-        confidence = np.max(prediction)
+        confidence = float(prediction[0][predicted_class_idx])
         predicted_label = CLASSES[predicted_class_idx]
-        
+
         return {
             "prediction": prediction[0].tolist(),
             "class": predicted_label,
-            "confidence": float(confidence),
-            "all_predictions": {c: float(p) for c, p in zip(CLASSES, prediction[0])}
+            "confidence": confidence,
+            "all_predictions": {
+                c: float(p) for c, p in zip(CLASSES, prediction[0])
+            }
         }
+
+    except HTTPException:
+        raise
+
     except Exception as e:
         logging.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=6000)

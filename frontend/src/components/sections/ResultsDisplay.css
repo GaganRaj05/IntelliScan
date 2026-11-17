@@ -1,44 +1,16 @@
-.result-container {
-
-    max-width: 500px;
-    margin: 200px auto;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: "Segoe UI", sans-serif;
-  }
-  
-  .result-container h2 {
-    font-size: 24px;
-    margin-bottom: 12px;
-    color: #333;
-  }
-  
-  .result-container h3 {
-    margin-top: 24px;
-    font-size: 18px;
-    color: #444;
-  }
-  
-  .result-container p {
-    margin: 8px 0;
-    font-size: 16px;
-  }
-  
-  .result-container ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .result-container li {
-    margin: 6px 0;
-    background-color: #e0e0e0;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 15px;
-    color: #333;
-    display: flex;
-    justify-content: space-between;
-  }
-  
+.result { max-width: 640px; margin: 0 auto; padding: 136px 20px 96px; }
+.result__card { padding: 40px 32px; border-radius: var(--radius-xl); }
+.result__label { margin: 0; color: var(--text-secondary); }
+.result__class { margin: 4px 0 0; font-size: clamp(2rem, 6vw, 3rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; text-transform: capitalize; }
+.result__conf { margin: 10px 0 0; font-size: 1.125rem; color: var(--accent); font-weight: 500; font-variant-numeric: tabular-nums; }
+.result__heading { margin: 36px 0 16px; font-size: 1.125rem; letter-spacing: -0.01em; }
+.result__bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.result__bar { display: grid; grid-template-columns: 130px 1fr 56px; gap: 12px; align-items: center; font-size: 0.9375rem; text-transform: capitalize; }
+.result__track { height: 8px; border-radius: 99px; background: rgba(0, 0, 0, 0.07); overflow: hidden; }
+.result__track i { display: block; height: 100%; border-radius: inherit; background: rgba(75, 74, 207, 0.35); }
+.result__bar.is-top .result__track i { background: var(--accent); }
+.result__bar b { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+.result__note { margin: 32px 0 0; font-size: 0.8125rem; color: var(--text-secondary); }
+.result__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.result__loading { padding: 160px 20px; text-align: center; color: var(--text-secondary); }
+@media (max-width: 520px) { .result__bar { grid-template-columns: 96px 1fr 52px; } .result__card { padding: 32px 20px; } }

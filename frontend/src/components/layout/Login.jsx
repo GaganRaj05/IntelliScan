@@ -1,56 +1,93 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { X } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import {  toast } from 'react-toastify';
 import { signIn } from "../../services/auth";
+import Button from "../ui/Button";
 import "./login.css";
-function Login({onClose, onRegisterClick}) {
-    const [formData, setFormData] = useState({email:"",password:""});
-    const [isLoading,setIsLoading] = useState(false);
-    const {user,setUser} = useAuth();
-    
-    const handleChange = (e)=> {
-        setFormData({...formData,[e.target.name]:e.target.value});
-    }
 
-    const handleSubmit = async(e)=> {
-        if(user) {
-            toast.success("Already Logged In")
-            onClose();
-            
-            return;
-        }    
-        setIsLoading(true)
-        e.preventDefault();
-        const response = await signIn(formData);
-        if(response) {
-            setIsLoading(false);
-        }
-        if(response.error) {
-            toast.error(response.error === "Failed to fetch" ? "Some error occured please try again later" : response.error);
-            return;
-        }
-        setUser(response.userData);
-        onClose();
-        toast.success("Login successfull");
-    }
+function Login({ onClose, onRegisterClick }) {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, setUser } = useAuth();
 
-    return (
-        <div className="modal" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <button className="close-btn" onClick={onClose}>&times;</button>
-          <h2 className="text-center text-xl font-semibold mb-4 text-white">Login</h2>
-  
-          <form method="POST" onSubmit={handleSubmit}>
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (user) {
+      toast.success("Already Logged In");
+      onClose();
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await signIn(formData);
+      if (response.error) {
+        toast.error(
+          response.error === "Failed to fetch"
+            ? "Some error occured please try again later"
+            : response.error
+        );
+        return;
+      }
+      setUser(response.userData);
+      onClose();
+      toast.success("Login successfull");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth" onClick={onClose}>
+      <motion.div
+        className="auth__card glass glass--strong"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-title"
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.95, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+      >
+        <button type="button" className="auth__close" onClick={onClose} aria-label="Close">
+          <X size={18} />
+        </button>
+        <h2 id="login-title" className="auth__title">Welcome back</h2>
+        <p className="auth__sub">Log in to analyze your scans.</p>
+
+        <form className="auth__form" onSubmit={handleSubmit}>
+          <div className="field">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="text" placeholder="Enter your email id" onChange={handleChange} value={formData.email} required />
+            <input id="email" name="email" type="email" autoComplete="email" autoFocus
+              placeholder="you@example.com" onChange={handleChange} value={formData.email} required />
+          </div>
+          <div className="field">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="Enter your password" onChange={handleChange} value={formData.password} required />
-            <button type="submit" className="login-submit" disabled={isLoading}>Submit</button>
-          <p>Not a user yet ?<a  ><button style={{border:"0px",color:"gold",fontSize:"20px",backgroundColor:"#0d1114",cursor:"pointer"}} onClick={()=>onRegisterClick()}>Register</button></a></p>
+            <input id="password" name="password" type="password" autoComplete="current-password"
+              placeholder="Enter your password" onChange={handleChange} value={formData.password} required />
+          </div>
+          <Button type="submit" className="auth__submit" disabled={isLoading}>
+            {isLoading ? "Logging in…" : "Log in"}
+          </Button>
+        </form>
 
-          </form>
-        </div>
-      </div>
-      )
+        <p className="auth__switch">
+          Not a user yet?{" "}
+          <Button variant="link" onClick={onRegisterClick}>Register</Button>
+        </p>
+      </motion.div>
+    </div>
+  );
 }
+
 export default Login;

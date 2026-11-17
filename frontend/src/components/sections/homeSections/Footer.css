@@ -1,0 +1,16 @@
+.footer { border-top: 1px solid rgba(0, 0, 0, 0.08); padding: 48px 20px 56px; color: var(--text-secondary); }
+.footer__inner { max-width: var(--container); margin: 0 auto; display: grid; gap: 12px; }
+.footer__grid { grid-template-columns: 2fr 1fr 1fr; gap: 40px; padding-bottom: 32px; }
+.footer__brand { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 600; color: var(--accent); }
+.footer__note { margin: 0; max-width: 78ch; font-size: 0.8125rem; line-height: 1.5; }
+.footer__about .footer__note { margin-top: 10px; max-width: 36ch; }
+.footer__col { display: flex; flex-direction: column; gap: 10px; }
+.footer__col h4 { margin: 0 0 4px; font-size: 0.875rem; font-weight: 600; color: var(--text); }
+.footer__col a { font-size: 0.9375rem; color: var(--text-secondary); transition: color var(--dur) var(--ease-out); }
+.footer__col a:hover { color: var(--text); }
+.footer__legal { padding-top: 24px; border-top: 1px solid rgba(0, 0, 0, 0.08); }
+
+@media (max-width: 860px) {
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__about { grid-column: 1 / -1; }
+}
