@@ -1,435 +1,312 @@
 # IntelliScan --- Brain Tumor Classification System
 
-IntelliScan is a full-stack brain MRI classification application that
-combines a **MERN-based web application**, a **FastAPI inference
-service**, and a **TensorFlow/Keras deep learning model** to classify
-uploaded MRI images.
+IntelliScan is a full-stack brain MRI classification application. It
+combines a React frontend and Node.js/Express backend with a separate
+FastAPI AI service that uses an already-trained TensorFlow/Keras model
+to classify MRI images.
 
-The system predicts one of three classes:
+The model predicts one of three classes:
 
--   **Meningioma** --- tumor class
--   **Pituitary** --- tumor class
--   **No Tumor** --- no tumor detected by the model
+-   `meningioma`
+-   `pituitary`
+-   `notumor`
 
-> **Scope:** This model is trained for the three classes listed above.
-> It does not include glioma classification. Its output is an AI model
-> prediction, not a medical diagnosis.
-
-------------------------------------------------------------------------
+> **Scope:** Glioma is not included in this model. The output is an AI
+> prediction and must not be treated as a medical diagnosis.
 
 ## Features
 
--   Brain MRI image classification using a MobileNetV2-based
-    transfer-learning model.
--   Three-class prediction: `meningioma`, `pituitary`, and `notumor`.
--   FastAPI service for model inference.
--   MERN stack application for the user-facing experience.
--   Image preprocessing consistent with the model's training pipeline.
--   Training and validation metrics, classification report, and
-    confusion matrix generation.
--   Saved model checkpoint in Keras `.keras` format.
+-   Brain MRI classification using a trained MobileNetV2-based model.
+-   Three-class prediction: meningioma, pituitary, and no tumor.
+-   React-based user interface.
+-   Node.js/Express application backend.
+-   Separate FastAPI inference service.
+-   MongoDB database integration.
+-   JWT-based authentication configuration.
+-   Model evaluation artifacts, including a confusion matrix and
+    training-history plot.
 
 ## System Architecture
 
 ``` text
-┌─────────────────────────────┐
-│       MERN Application      │
-│                             │
-│  React frontend             │
-│  Node.js / Express backend  │
-└──────────────┬──────────────┘
+┌──────────────────────────────┐
+│        React Frontend        │
+│                              │
+│       Vite development       │
+└──────────────┬───────────────┘
                │
-               │ Image / prediction request
+               │ VITE_BACKEND_URL
                ▼
-┌─────────────────────────────┐
-│       FastAPI Service       │
-│                             │
-│  Receives MRI image         │
-│  Preprocesses image         │
-│  Loads trained model        │
-│  Runs model inference       │
-│  Returns prediction         │
-└──────────────┬──────────────┘
+┌──────────────────────────────┐
+│    Node.js / Express API     │
+│                              │
+│  MongoDB                     │
+│  JWT authentication          │
+│  Application routes          │
+└──────────────┬───────────────┘
+               │
+               │ AI_SERVICE_URL
+               ▼
+┌──────────────────────────────┐
+│        FastAPI Service       │
+│          ai-service/         │
+│                              │
+│  Receives MRI image          │
+│  Runs model inference        │
+│  Returns prediction          │
+└──────────────┬───────────────┘
                │
                ▼
-┌─────────────────────────────┐
-│   TensorFlow / Keras Model  │
-│                             │
-│  MobileNetV2 backbone       │
-│  Global Average Pooling     │
-│  Dense (256, ReLU)          │
-│  Dropout (0.5)              │
-│  Dense (3, Softmax)         │
-└─────────────────────────────┘
+┌──────────────────────────────┐
+│    Trained Keras Model       │
+│                              │
+│       MobileNetV2            │
+│       3-class output         │
+└──────────────────────────────┘
 ```
 
-The MERN application provides the user interface and application
-workflow. The FastAPI service handles model inference, keeping the
-machine-learning component separate from the main application backend.
+The model is already provided with the project. **You do not need to
+train the model or run the training script to start the application.**
+The FastAPI service loads the available model for inference.
 
 ## Machine Learning Model
 
-### Model Architecture
+The classifier is based on MobileNetV2 with a custom classification
+head.
 
-The classifier uses **MobileNetV2**, initialized with ImageNet
-pretrained weights, as its feature extraction backbone.
+  Component                           Configuration
+  ----------------------------------- ---------------------------------
+  Base architecture                   MobileNetV2
+  Pretrained weights                  ImageNet
+  Input dimensions                    128 × 128 × 3
+  Pooling                             GlobalAveragePooling2D
+  Dense layer                         256 units, ReLU
+  Dropout                             0.5
+  Output layer                        3 units, Softmax
+  Loss                                Sparse Categorical Crossentropy
+  Optimizer during initial training   Adam, learning rate 0.0001
+  Optimizer during fine-tuning        Adam, learning rate 0.00001
 
-A custom classification head is added:
+### Classes
 
-  Layer                   Configuration
-  ----------------------- ---------------------------------
-  Base model              MobileNetV2
-  Pretrained weights      ImageNet
-  Input size              128 × 128 × 3
-  Global pooling          GlobalAveragePooling2D
-  Fully connected layer   Dense (256, ReLU)
-  Regularization          Dropout (0.5)
-  Output layer            Dense (3, Softmax)
-  Loss function           Sparse Categorical Crossentropy
-  Optimizer               Adam
+  Class          Meaning
+  -------------- ------------------------
+  `meningioma`   Meningioma tumor class
+  `pituitary`    Pituitary tumor class
+  `notumor`      No-tumor class
 
-### Training Configuration
+### Training methodology
 
-  Parameter                   Value
-  --------------------------- -----------------------
-  Image dimensions            128 × 128
-  Batch size                  32
-  Maximum configured epochs   50 per training phase
-  Number of classes           3
-  Training/validation split   80% / 20%
-  Initial learning rate       0.0001
-  Fine-tuning learning rate   0.00001
-  Backbone                    MobileNetV2
+The model was developed using transfer learning in two phases:
 
-### Data Augmentation
+1.  **Feature extraction:** the pretrained MobileNetV2 backbone was
+    frozen while the custom classification head was trained.
+2.  **Fine-tuning:** the final 30 layers of the backbone were made
+    trainable, while earlier layers and Batch Normalization layers
+    remained frozen.
 
-The training data generator applies:
+Training used image augmentation, an 80/20 training-validation split,
+EarlyStopping, ModelCheckpoint, and ReduceLROnPlateau.
 
--   Rotation: 20 degrees
--   Width shift: 0.1
--   Height shift: 0.1
--   Zoom: 0.2
--   Brightness range: 0.8--1.2
--   Horizontal flipping
--   Nearest-neighbor fill
-
-The validation generator uses MobileNetV2 preprocessing without the
-training augmentations.
-
-### Transfer Learning and Fine-Tuning
-
-Training is performed in two phases:
-
-**Phase 1 --- Feature extraction**
-
--   Load MobileNetV2 with ImageNet pretrained weights.
--   Freeze the pretrained backbone.
--   Train the custom classification head.
--   Use Adam with a learning rate of `0.0001`.
-
-**Phase 2 --- Fine-tuning**
-
--   Unfreeze the MobileNetV2 backbone.
--   Keep all but the final 30 backbone layers frozen.
--   Keep Batch Normalization layers frozen.
--   Recompile with Adam at a lower learning rate of `0.00001`.
--   Continue training with validation monitoring.
-
-### Training Callbacks
-
-  -----------------------------------------------------------------------
-  Callback                Configuration           Purpose
-  ----------------------- ----------------------- -----------------------
-  EarlyStopping           Patience: 10            Stop when validation
-                                                  loss stops improving
-                                                  and restore the best
-                                                  weights
-
-  ModelCheckpoint         Save best only          Save the model with the
-                                                  lowest validation loss
-
-  ReduceLROnPlateau       Factor: 0.5, patience:  Reduce the learning
-                          3                       rate when validation
-                                                  loss plateaus
-  -----------------------------------------------------------------------
-
-The configured model output is:
-
-``` text
-brain_tumor_model_updated.keras
-```
-
-## Model Evaluation
-
-The training pipeline generates two evaluation artifacts:
-
-### 1. Confusion Matrix
-
-`confusion_matrix.png`
-
-Displays the actual-versus-predicted classification counts for:
-
--   meningioma
--   pituitary
--   notumor
-
-### 2. Training History
-
-`training_history.png`
-
-Contains two plots:
-
--   Training and validation accuracy
--   Training and validation loss
-
-The script also prints a classification report containing precision,
-recall, F1-score, and support for each class.
+Training is documented here for reference only. It is not part of the
+application startup process.
 
 ## Technology Stack
 
-  Component                  Technology
-  -------------------------- -----------------------------------
-  Frontend                   React
-  Main application backend   Node.js, Express.js
-  Database                   MongoDB
-  ML inference API           FastAPI
-  Deep learning framework    TensorFlow / Keras
-  Model architecture         MobileNetV2
-  Numerical processing       NumPy
-  Image/model evaluation     Matplotlib, Seaborn, scikit-learn
-  Language                   Python, JavaScript
+  Layer                 Technology
+  --------------------- ------------------------------------------
+  Frontend              React, Vite
+  Application backend   Node.js, Express.js
+  Database              MongoDB
+  AI service            FastAPI
+  Deep learning         TensorFlow / Keras
+  Model                 MobileNetV2
+  Evaluation            NumPy, Matplotlib, Seaborn, scikit-learn
 
 ## Project Structure
 
-The following is a suggested logical structure. Adjust the paths to
-match your actual repository layout.
+The key application directories are:
 
 ``` text
 IntelliScan/
-│
-├── frontend/                       # React frontend
-│
-├── backend/                        # Node.js / Express backend
-│
-├── ai-model/
-│   ├── train.py                    # Model training script
-│   ├── brain_tumor_model_updated.keras
-│   ├── confusion_matrix.png
-│   └── training_history.png
-│
-├── fastapi-service/
-│   ├── main.py                     # FastAPI application
-│   └── requirements.txt
-│
+├── frontend/       # React + Vite application
+├── backend/        # Node.js + Express application
+├── ai-service/     # FastAPI model inference service
 └── README.md
 ```
 
-## Dataset
+The trained model and any supporting files are expected to be available
+where the AI service is configured to load them.
 
-The training script expects a directory-based image dataset:
+## Prerequisites
+
+-   Node.js and npm
+-   Python
+-   MongoDB running locally, or a reachable MongoDB instance
+-   The trained model file supplied with the project
+
+## Setup and Run
+
+Run each service in a separate terminal.
+
+### 1. Start MongoDB
+
+Make sure MongoDB is running and accessible at:
 
 ``` text
-Training/
-├── meningioma/
-├── pituitary/
-└── notumor/
+mongodb://127.0.0.1:27017
 ```
 
-Each directory contains the MRI images belonging to that class.
+The Express backend uses the `Intelli_Scan` database.
 
-The training and validation generators use an 80/20 split with a fixed
-seed of `42`.
+### 2. Configure and start the Express backend
 
-Set the dataset path in the training script:
+Open the Express backend directory and create a `.env` file:
 
-``` python
-DATASET_PATH = r"path/to/Training"
+``` env
+MONGODB_URL=mongodb://127.0.0.1:27017/Intelli_Scan
+JWT_SECRET=your_jwt_secret_key
+AI_SERVICE_URL=http://localhost:6000
+PORT=8000
 ```
 
-## Installation and Setup
-
-The commands below describe the typical setup. Replace directory names
-and environment variables with the ones used in your repository.
-
-### Prerequisites
-
--   Python 3.10 or a TensorFlow-supported Python version
--   Node.js and npm
--   MongoDB, if the application uses a local MongoDB instance
--   The trained Keras model file
-
-### 1. Clone the repository
+Install dependencies and start the backend:
 
 ``` bash
-git clone <YOUR_REPOSITORY_URL>
-cd IntelliScan
+npm install
+npm start
 ```
 
-### 2. Set up the FastAPI inference service
+Use the development command configured in your `package.json` if your
+project uses a different script.
+
+The Express backend runs on port `8000`.
+
+### 3. Configure and start the Vite frontend
+
+In the Vite frontend directory, create a `.env` file:
+
+``` env
+VITE_BACKEND_URL=http://localhost:8000/app
+```
+
+Install dependencies and start the frontend:
 
 ``` bash
-cd fastapi-service
-
-python -m venv venv
+npm install
+npm run dev
 ```
 
-Activate the virtual environment:
+Vite will print the local frontend URL in the terminal.
+
+### 4. Start the AI service
+
+Open the `ai-service` directory.
+
+Create and activate a Python virtual environment:
 
 **Windows**
 
 ``` powershell
-venv\Scripts\activate
+python -m venv env
+.\env\Scripts\activate
 ```
 
 **Linux / macOS**
 
 ``` bash
-source venv/bin/activate
+python -m venv env
+source env/bin/activate
 ```
 
-Install the Python dependencies:
+Run the AI service:
 
 ``` bash
-pip install fastapi uvicorn tensorflow numpy pillow
+python app.py
 ```
 
-If your FastAPI service has a `requirements.txt`, use that instead:
-
-``` bash
-pip install -r requirements.txt
-```
-
-Start the API:
-
-``` bash
-uvicorn main:app --reload
-```
-
-The service will typically be available at:
+The Express backend is configured to reach the AI service at:
 
 ``` text
-http://127.0.0.1:8000
+http://localhost:6000
 ```
 
-FastAPI's interactive API documentation is typically available at:
+Ensure the FastAPI application in `app.py` starts on the host and port
+expected by `AI_SERVICE_URL`.
 
-``` text
-http://127.0.0.1:8000/docs
-```
+## Application Workflow
 
-> The actual host, port, endpoint, and request format depend on your
-> FastAPI implementation.
+1.  The user interacts with IntelliScan through the React frontend.
+2.  The frontend sends application requests to the Express backend using
+    `VITE_BACKEND_URL`.
+3.  The Express backend handles application logic and MongoDB
+    operations.
+4.  For MRI classification, the backend communicates with the AI service
+    using `AI_SERVICE_URL`.
+5.  The AI service uses the supplied trained model to generate a
+    prediction.
+6.  The prediction is returned through the backend and presented in the
+    frontend.
 
-### 3. Set up the MERN application
+## Model Evaluation
 
-Install frontend dependencies:
+The model training and evaluation workflow produced the following
+artifacts:
 
-``` bash
-cd frontend
-npm install
-npm run dev
-```
+-   `confusion_matrix.png` --- actual-versus-predicted counts for the
+    three supported classes.
+-   `training_history.png` --- training and validation accuracy and loss
+    across epochs.
+-   Classification report --- precision, recall, F1-score, and support
+    for each class.
 
-Install backend dependencies:
+These are evaluation outputs from model development; they are not
+required to run the web application.
 
-``` bash
-cd backend
-npm install
-```
+## Configuration Reference
 
-Start the Node.js / Express backend using the start script defined in
-its `package.json`, for example:
+  -----------------------------------------------------------------------
+  Variable                Service                 Purpose
+  ----------------------- ----------------------- -----------------------
+  `MONGODB_URL`           Express                 MongoDB connection
+                                                  string
 
-``` bash
-npm start
-```
+  `JWT_SECRET`            Express                 Secret used for JWT
+                                                  operations
 
-Configure the frontend and backend environment variables according to
-your application's configuration.
+  `AI_SERVICE_URL`        Express                 URL of the FastAPI
+                                                  inference service
 
-## Prediction Workflow
+  `PORT`                  Express                 Port used by the
+                                                  Express backend
 
-The intended inference flow is:
+  `VITE_BACKEND_URL`      Vite frontend           Base URL used by the
+                                                  frontend to reach the
+                                                  Express application
+  -----------------------------------------------------------------------
 
-1.  The user uploads a brain MRI image through the React interface.
-2.  The MERN application handles the application request.
-3.  The image is forwarded to the FastAPI inference service.
-4.  FastAPI preprocesses the image to match the model's expected input.
-5.  The trained MobileNetV2 classifier performs inference.
-6.  The softmax output is used to determine the predicted class.
-7.  The prediction is returned to the application and displayed to the
-    user.
+For local development, the configured URLs are:
 
-### Output Classes
+-   Frontend → Express: `http://localhost:8000/app`
+-   Express → AI service: `http://localhost:6000`
 
-  Model output   Interpretation
-  -------------- --------------------------
-  `meningioma`   Tumor class predicted
-  `pituitary`    Tumor class predicted
-  `notumor`      No tumor class predicted
+## Important Notes
 
-The model's softmax output represents class scores. These scores should
-not be interpreted as clinically calibrated probabilities.
-
-## Training the Model
-
-Install the training dependencies:
-
-``` bash
-pip install tensorflow numpy matplotlib seaborn scikit-learn
-```
-
-Run the training script:
-
-``` bash
-python train.py
-```
-
-The script:
-
-1.  Loads the dataset.
-2.  Creates augmented training and validation generators.
-3.  Builds the MobileNetV2 classifier.
-4.  Trains the classification head.
-5.  Fine-tunes the final layers of the backbone.
-6.  Saves the best checkpoint.
-7.  Generates predictions on the validation set.
-8.  Prints the classification report.
-9.  Saves the confusion matrix and training history plots.
-
-## Important Notes and Limitations
-
--   The model recognizes only the three classes used during training. It
-    cannot identify glioma in this configuration.
--   Predictions depend on the quality, resolution, and distribution of
-    the input MRI images.
--   The model should not be used as a standalone diagnostic tool or as a
-    replacement for a qualified radiologist.
--   Validation performance does not guarantee performance on images from
-    other hospitals, scanners, or patient populations.
--   The validation split is created from the supplied directory dataset;
-    the script does not establish an independent external test set.
--   The saved checkpoint is selected using validation loss. The training
-    script subsequently saves the final model state as well, so the
-    final saved file may not necessarily represent the best validation
-    checkpoint.
-
-## Future Improvements
-
-Potential improvements include:
-
--   Adding additional tumor categories, including glioma.
--   Evaluating on an independent external dataset.
--   Improving robustness across MRI acquisition settings.
--   Adding prediction confidence visualization with appropriate
-    calibration.
--   Implementing Grad-CAM for model interpretability.
--   Adding image quality checks before inference.
--   Improving API validation, logging, and inference monitoring.
+-   The application uses a three-class model; glioma is not supported.
+-   The trained model is supplied. Model training is not required during
+    setup.
+-   The AI service must load the model from the correct path configured
+    in its implementation.
+-   Keep real secrets private. Replace the example `JWT_SECRET` with a
+    strong secret outside local testing.
+-   The model's predictions are not clinically validated diagnoses. Do
+    not use them as a substitute for assessment by a qualified medical
+    professional.
+-   Performance on images from other hospitals, scanners, or patient
+    populations may differ from validation results.
 
 ## Disclaimer
 
 IntelliScan is an educational and machine-learning project intended for
-research and demonstration purposes. Its predictions are not medical
-diagnoses. Always consult qualified medical professionals for the
-interpretation of MRI scans and clinical decisions.
+demonstration and research purposes. It is not a medical device and must
+not be used as the sole basis for diagnosis or treatment decisions.
