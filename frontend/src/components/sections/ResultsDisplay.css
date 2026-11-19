@@ -1,16 +1,26 @@
 .result { max-width: 640px; margin: 0 auto; padding: 136px 20px 96px; }
-.result__card { padding: 40px 32px; border-radius: var(--radius-xl); }
+
+/* In-page card: raised neumorphic slab (glass is reserved for floating layers) */
+.result__card { padding: 40px 32px; border-radius: var(--radius-xl); background: var(--neu-surface); box-shadow: var(--raised); }
 .result__label { margin: 0; color: var(--text-secondary); }
 .result__class { margin: 4px 0 0; font-size: clamp(2rem, 6vw, 3rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; text-transform: capitalize; }
-.result__conf { margin: 10px 0 0; font-size: 1.125rem; color: var(--accent); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* Confidence: pressed-in pill */
+.result__conf { display: inline-block; margin: 14px 0 0; padding: 6px 18px; border-radius: var(--radius-pill); box-shadow: var(--inset-sm); font-size: 1rem; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+
 .result__heading { margin: 36px 0 16px; font-size: 1.125rem; letter-spacing: -0.01em; }
-.result__bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.result__bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 .result__bar { display: grid; grid-template-columns: 130px 1fr 56px; gap: 12px; align-items: center; font-size: 0.9375rem; text-transform: capitalize; }
-.result__track { height: 8px; border-radius: 99px; background: rgba(0, 0, 0, 0.07); overflow: hidden; }
-.result__track i { display: block; height: 100%; border-radius: inherit; background: rgba(75, 74, 207, 0.35); }
+
+/* Track is an inset groove; the fill sits inside it */
+.result__track { height: 12px; border-radius: 99px; background: var(--bg); box-shadow: inset 2px 2px 5px var(--neu-dark), inset -2px -2px 5px var(--neu-light); overflow: hidden; }
+.result__track i { display: block; height: 100%; border-radius: inherit; background: rgba(75, 74, 207, 0.4); }
 .result__bar.is-top .result__track i { background: var(--accent); }
 .result__bar b { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
-.result__note { margin: 32px 0 0; font-size: 0.8125rem; color: var(--text-secondary); }
+
+/* Disclaimer sits in a shallow well */
+.result__note { margin: 32px 0 0; padding: 14px 18px; border-radius: var(--radius-md); box-shadow: var(--inset-sm); font-size: 0.8125rem; color: var(--text-secondary); }
 .result__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
 .result__loading { padding: 160px 20px; text-align: center; color: var(--text-secondary); }
+
 @media (max-width: 520px) { .result__bar { grid-template-columns: 96px 1fr 52px; } .result__card { padding: 32px 20px; } }

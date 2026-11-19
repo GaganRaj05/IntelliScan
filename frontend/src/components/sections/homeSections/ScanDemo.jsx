@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { toast } from "react-toastify";
 import { ImagePlus, RotateCcw } from "lucide-react";
-import Button from "../../ui/Button";
+import NeuButton from "./NeuButton";
 
 // Replace with a real API call that returns [{ label, score }] sorted by score.
 const analyzeScan = async () => {
   await new Promise((r) => setTimeout(r, 1800));
   return [
-    { label: "Glioma", score: 0.07 },
-    { label: "Meningioma", score: 0.05 },
-    { label: "Pituitary tumor", score: 0.03 },
+    { label: "Meningioma", score: 0.09 },
+    { label: "Pituitary tumor", score: 0.06 },
     { label: "No tumor", score: 0.85 },
   ].sort((a, b) => b.score - a.score);
 };
 
 const ScanDemo = () => {
+  const reduce = useReducedMotion();
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -51,18 +51,28 @@ const ScanDemo = () => {
     <section className="section" id="demo">
       <h2 className="section__title">Try it with a scan.</h2>
       <p className="section__sub">This demo returns a simulated result and does not upload your image.</p>
-      <div className="demo glass glass--strong">
+      <div className="demo">
         {!file ? (
           <div {...getRootProps({ className: `demo__drop ${isDragActive ? "is-active" : ""}` })}>
             <input {...getInputProps()} aria-label="Upload MRI image" />
-            <ImagePlus size={36} strokeWidth={1.5} aria-hidden="true" />
+            <span className="well"><ImagePlus size={26} strokeWidth={1.5} aria-hidden="true" /></span>
             <p><strong>Drop an MRI image here</strong></p>
             <p className="muted">or click to choose a PNG or JPG</p>
           </div>
         ) : (
           <div className="demo__result">
-            <img src={preview} alt="Uploaded MRI scan" />
-            <div className="demo__side">
+            <div className="demo__img">
+              <img src={preview} alt="Uploaded MRI scan" />
+              {busy && !reduce && (
+                <motion.span
+                  className="slice__sweep"
+                  initial={{ top: "0%" }}
+                  animate={{ top: "100%" }}
+                  transition={{ duration: 1.2, ease: "linear", repeat: Infinity }}
+                />
+              )}
+            </div>
+            <div className="demo__side glass">
               <AnimatePresence mode="wait">
                 {result ? (
                   <motion.div key="r" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -70,7 +80,7 @@ const ScanDemo = () => {
                     {result.map((r) => (
                       <div key={r.label} className="bar">
                         <span>{r.label}</span>
-                        <div className="bar__track">
+                        <div className="track">
                           <motion.i
                             initial={{ width: 0 }}
                             animate={{ width: `${r.score * 100}%` }}
@@ -89,8 +99,8 @@ const ScanDemo = () => {
                 )}
               </AnimatePresence>
               <div className="demo__actions">
-                {!result && <Button onClick={run} disabled={busy}>{busy ? "Analyzing…" : "Analyze scan"}</Button>}
-                <Button variant="glass" onClick={reset}><RotateCcw size={16} aria-hidden="true" />Choose another</Button>
+                {!result && <NeuButton onClick={run} disabled={busy}>{busy ? "Analyzing…" : "Analyze scan"}</NeuButton>}
+                <NeuButton variant="soft" onClick={reset}><RotateCcw size={16} aria-hidden="true" />Choose another</NeuButton>
               </div>
             </div>
           </div>

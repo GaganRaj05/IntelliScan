@@ -1,7 +1,8 @@
+
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Brain, Menu, X } from "lucide-react";
+import { Brain, Menu, X, Sun, Moon } from "lucide-react";
 import "./Header.css";
 
 const CONTACT_EMAIL = "gaganraj.dev05@gmail.com";
@@ -18,6 +19,41 @@ const LINKS = [
 const Header = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return (
+      localStorage.getItem("theme") === "dark" ||
+      (!localStorage.getItem("theme") &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+  });
+
+  const { pathname, hash, key } = useLocation();
+
+  // Apply theme globally and persist preference
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      darkMode ? "dark" : "light"
+    );
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  // Scroll to section after navigation
+  useEffect(() => {
+    if (!hash) return;
+
+    let timer;
+    let tries = 0;
+
+    const go = () => {
+      const el = document.getElementById(hash.slice(1));
+      if (el) el.scrollIntoView();
+      else if (tries++ < 20) timer = setTimeout(go, 50);
+    };
+
+    go();
+    return () => clearTimeout(timer);
+  }, [pathname, hash, key]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -33,6 +69,8 @@ const Header = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const toggleTheme = () => setDarkMode((prev) => !prev);
+
   return (
     <header className="header">
       <div className="header__inner">
@@ -44,12 +82,26 @@ const Header = () => {
 
           <nav className="header__links" aria-label="Primary">
             {LINKS.map((l) => (
-              <a key={l.href} href={l.href}>{l.label}</a>
+              <Link key={l.href} to={`/${l.href}`}>
+                {l.label}
+              </Link>
             ))}
           </nav>
 
           <div className="header__actions">
-            <a className="header__contact" href={`mailto:${CONTACT_EMAIL}`}>Contact us</a>
+            <button
+              className="header__theme"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
+              title={`Switch to ${darkMode ? "light" : "dark"} mode`}
+            >
+              {darkMode ? <Sun size={19} /> : <Moon size={19} />}
+            </button>
+
+            <a className="header__contact" href={`mailto:${CONTACT_EMAIL}`}>
+              Contact us
+            </a>
+
             <button
               className="header__toggle"
               onClick={() => setOpen((o) => !o)}
@@ -73,10 +125,30 @@ const Header = () => {
               exit={{ opacity: 0, scale: 0.96, y: -8 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             >
+              <button
+                className="header__theme header__theme--mobile"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
+              >
+                {darkMode ? <Sun size={19} /> : <Moon size={19} />}
+                {darkMode ? "Light mode" : "Dark mode"}
+              </button>
+
               {LINKS.map((l) => (
-                <a key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</a>
+                <Link
+                  key={l.href}
+                  to={`/${l.href}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </Link>
               ))}
-              <a className="header__contact header__contact--panel" href={`mailto:${CONTACT_EMAIL}`} onClick={() => setOpen(false)}>
+
+              <a
+                className="header__contact header__contact--panel"
+                href={`mailto:${CONTACT_EMAIL}`}
+                onClick={() => setOpen(false)}
+              >
                 Contact us
               </a>
             </motion.nav>

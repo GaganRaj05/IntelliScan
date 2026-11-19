@@ -11,10 +11,10 @@ const List = ({ items, icon: Icon, tone }) => (
 
 const Limits = () => (
   <section className="section section--narrow" id="limits">
-    <h2 className="section__title">What Pixel does, and what it doesn’t.</h2>
+    <h2 className="section__title">What IntelliScan does, and what it doesn’t.</h2>
     <div className="limits">
-      <div className="card"><h3>Pixel does</h3><List items={DOES} icon={Check} tone="yes" /></div>
-      <div className="card"><h3>Pixel does not</h3><List items={DOESNT} icon={X} tone="no" /></div>
+      <div className="neu-card"><h3>IntelliScan does</h3><List items={DOES} icon={Check} tone="yes" /></div>
+      <div className="limits__no"><h3>IntelliScan does not</h3><List items={DOESNT} icon={X} tone="no" /></div>
     </div>
   </section>
 );

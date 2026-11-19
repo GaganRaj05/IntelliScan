@@ -1,1 +1,4 @@
-myenv/*
+
+.env
+myenv
+testing.py

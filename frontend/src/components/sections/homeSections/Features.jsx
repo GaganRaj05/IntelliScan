@@ -16,7 +16,7 @@ const Features = () => (
     <div className="features">
       {FEATURES.map(({ icon: Icon, title, text }) => (
         <div key={title} className="feature">
-          <span className="feature__icon"><Icon size={22} strokeWidth={1.6} aria-hidden="true" /></span>
+          <span className="well"><Icon size={22} strokeWidth={1.6} aria-hidden="true" /></span>
           <h3>{title}</h3>
           <p>{text}</p>
         </div>

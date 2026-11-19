@@ -51,7 +51,7 @@ const UploadSection = () => {
       <h1 className="uploader__title">Upload an MRI scan.</h1>
       <p className="uploader__sub">Add a brain MRI image and Pixel will analyze it in seconds.</p>
 
-      <div className="uploader__card glass glass--strong">
+      <div className="uploader__card">
         {!image ? (
           <div {...getRootProps({ className: `uploader__drop ${isDragActive ? "is-active" : ""}` })}>
             <input {...getInputProps()} aria-label="Choose MRI image" />
@@ -61,7 +61,9 @@ const UploadSection = () => {
           </div>
         ) : (
           <div className="uploader__preview">
-            <img src={preview} alt="Selected MRI scan preview" />
+            <div className="uploader__frame">
+              <img src={preview} alt="Selected MRI scan preview" />
+            </div>
             <p className="uploader__meta">{image.name}</p>
             <div className="uploader__actions">
               <Button onClick={handleUpload} disabled={isLoading}>

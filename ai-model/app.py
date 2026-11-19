@@ -13,7 +13,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 from sklearn.metrics import classification_report, confusion_matrix
 
 DATASET_PATH = r"D:\IntelliScan\ai-model\Training"
-CLASSES = ['glioma', 'meningioma', 'pituitary', 'notumor']
+CLASSES = ['meningioma', 'pituitary', 'notumor']
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 32
 EPOCHS = 50
@@ -21,7 +21,7 @@ MODEL_SAVE_PATH = "brain_tumor_model_updated.keras"
 
 base_dir = r"D:\IntelliScan\ai-model\Training"
 
-for tumor_class in ['glioma', 'meningioma', 'pituitary', 'notumor']:
+for tumor_class in ['meningioma', 'pituitary', 'notumor']:
     print(f"{tumor_class}: {len(os.listdir(os.path.join(base_dir, tumor_class)))} images")
 
 train_datagen = ImageDataGenerator(

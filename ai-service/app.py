@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 # Load model
-model = tf.keras.models.load_model(r'D:\IntelliScan\ai-model\brain_tumor_model_updated.keras')
+model = tf.keras.models.load_model(r'D:\IntelliScan\ai-model\brain_tumor_model.keras')
 
 def preprocess_image(image_bytes):
     try:
@@ -99,6 +99,64 @@ async def predict(file: UploadFile = File(...)):
     except Exception as e:
         logging.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/predict/batch")
+async def predict_batch(files: list[UploadFile] = File(...)):
+
+    batch_images = []
+    valid_files = []
+    results = [None] * len(files)
+
+    for idx, file in enumerate(files):
+        try:
+            contents = await file.read()
+
+            if not contents:
+                raise ValueError("Empty image file")
+
+            image = Image.open(io.BytesIO(contents)).convert("RGB")
+            image = image.resize(IMG_SIZE, Image.Resampling.BILINEAR)
+
+            img_array = np.array(image, dtype=np.float32)
+            img_array = preprocess_input(img_array)
+
+            batch_images.append(img_array)
+            valid_files.append((idx, file.filename))
+
+        except Exception as e:
+            results[idx] = {
+                "filename": file.filename,
+                "error": str(e)
+            }
+
+    if batch_images:
+        batch_array = np.stack(batch_images, axis=0)
+
+        predictions = model.predict(
+            batch_array,
+            batch_size=len(batch_array),
+            verbose=0
+        )
+
+        for prediction, (idx, filename) in zip(
+            predictions, valid_files
+        ):
+            predicted_idx = int(np.argmax(prediction))
+            confidence = float(prediction[predicted_idx])
+
+            results[idx] = {
+                "filename": filename,
+                "class": CLASSES[predicted_idx],
+                "confidence": confidence,
+                "all_predictions": {
+                    c: float(p)
+                    for c, p in zip(CLASSES, prediction)
+                }
+            }
+
+    return {"results": results}
+
 
 if __name__ == "__main__":
     import uvicorn

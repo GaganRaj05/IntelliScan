@@ -1,3 +1,4 @@
+/* Header = the floating glass layer. Controls inside it use soft neumorphic depth. */
 .header { position: fixed; top: 12px; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding-inline: 12px; pointer-events: none; }
 .header__inner { position: relative; width: min(var(--container), 100%); pointer-events: auto; }
 .header__bar { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 9px 0 18px; border-radius: var(--radius-pill); transition: background-color var(--dur) var(--ease-out); }
@@ -6,22 +7,113 @@
 .header__brand { display: flex; align-items: center; gap: 8px; color: var(--text); font-weight: 600; font-size: 1.0625rem; letter-spacing: -0.01em; }
 .header__brand svg { color: var(--accent); }
 
-.header__links { display: flex; gap: 24px; }
-.header__links a { color: var(--text-secondary); font-size: 0.9375rem; transition: color var(--dur) var(--ease-out); }
-.header__links a:hover { color: var(--text); }
+.header__links { display: flex; gap: 4px; }
+.header__links a { padding: 7px 14px; border-radius: var(--radius-pill); color: var(--text-secondary); font-size: 0.9375rem; transition: color var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out); }
+.header__links a:hover { color: var(--accent); background: var(--accent-soft); }
 
 .header__actions { display: flex; align-items: center; gap: 8px; }
-.header__contact { display: inline-flex; align-items: center; height: 38px; padding: 0 18px; border-radius: var(--radius-pill); background: var(--accent-fill); color: #fff; font-size: 0.9375rem; font-weight: 500; transition: background-color var(--dur) var(--ease-out); }
+.header__contact { display: inline-flex; align-items: center; height: 38px; padding: 0 18px; border-radius: var(--radius-pill); background: var(--accent-fill); color: #fff; font-size: 0.9375rem; font-weight: 500; box-shadow: 4px 4px 10px var(--neu-dark), -3px -3px 8px var(--neu-light); transition: background-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out); }
 .header__contact:hover { background: var(--accent-fill-hover); }
-.header__toggle { display: none; width: 36px; height: 36px; place-items: center; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text); cursor: pointer; }
+.header__contact:active { box-shadow: inset 3px 3px 7px rgba(0, 0, 0, 0.25); }
+
+.header__toggle { display: none; width: 38px; height: 38px; place-items: center; border: 0; border-radius: var(--radius-pill); background: var(--neu-surface); color: var(--text); cursor: pointer; box-shadow: var(--raised-sm); transition: box-shadow var(--dur) var(--ease-out); }
+.header__toggle[aria-expanded="true"] { box-shadow: var(--inset-sm); }
 
 .header__panel { position: absolute; top: calc(100% + 8px); left: 0; right: 0; padding: 12px; border-radius: var(--radius-lg); display: flex; flex-direction: column; transform-origin: top center; }
-.header__panel a { padding: 14px 12px; color: var(--text); font-size: 1.125rem; border-radius: var(--radius-sm); }
-.header__panel a:hover { background: rgba(0, 0, 0, 0.05); }
+.header .header__panel a { padding: 14px 12px; color: var(--text); font-size: 1.125rem; border-radius: var(--radius-sm); transition: background-color var(--dur) var(--ease-out); }
+.header .header__panel a:hover { background: var(--accent-soft); }
 .header__panel .header__contact--panel { justify-content: center; height: 48px; margin-top: 8px; color: #fff; }
-.header__panel .header__contact--panel:hover { background: var(--accent-fill-hover); }
+.header .header__panel .header__contact--panel:hover { background: var(--accent-fill-hover); }
 
 @media (max-width: 960px) {
   .header__links, .header__actions .header__contact { display: none; }
   .header__toggle { display: grid; }
+}
+
+/* Theme toggle */
+.header__theme {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--neu-surface);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--raised-sm);
+  transition:
+    color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+
+.header__theme:hover {
+  color: var(--accent);
+}
+
+.header__theme:active {
+  box-shadow: var(--inset-sm);
+}
+
+.header__theme--mobile {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 12px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+/* Mobile layout */
+@media (max-width: 960px) {
+  .header__links,
+  .header__actions .header__contact {
+    display: none;
+  }
+
+  .header__toggle {
+    display: grid;
+  }
+}
+
+/* Dark mode navbar overrides */
+[data-theme="dark"] .header__bar {
+  background: rgba(20, 20, 20, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .header__bar.is-scrolled {
+  background: rgba(20, 20, 20, 0.96);
+}
+
+[data-theme="dark"] .header__links a {
+  color: #bdbdbd;
+}
+
+[data-theme="dark"] .header__links a:hover {
+  color: var(--accent);
+  background: rgba(217, 183, 0, 0.12);
+}
+
+[data-theme="dark"] .header__brand {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header__panel {
+  background: rgba(24, 24, 24, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .header__panel a {
+  color: #e5e5e5;
+}
+
+[data-theme="dark"] .header__theme,
+[data-theme="dark"] .header__toggle {
+  background: #252525;
+  color: #ffffff;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4),
+              -2px -2px 6px rgba(255, 255, 255, 0.025);
 }

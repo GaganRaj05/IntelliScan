@@ -2,7 +2,7 @@ import { FileImage, Gauge, Layers, Lock } from "lucide-react";
 
 const ITEMS = [
   { icon: FileImage, text: "PNG and JPG brain MRI slices" },
-  { icon: Layers, text: "Four classes in one model" },
+  { icon: Layers, text: "Three classes in one model" },
   { icon: Gauge, text: "Confidence score on every result" },
   { icon: Lock, text: "Demo images stay in your browser" },
 ];

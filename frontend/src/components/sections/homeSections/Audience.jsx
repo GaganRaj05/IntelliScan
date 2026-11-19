@@ -7,7 +7,7 @@ const ROWS = [
 
 const Audience = () => (
   <section className="section section--narrow" id="who-its-for">
-    <h2 className="section__title">Who uses Pixel.</h2>
+    <h2 className="section__title">Who uses IntelliScan.</h2>
     <p className="section__sub">Anyone who looks at brain MRI and wants a faster first pass.</p>
     <dl className="audience">
       {ROWS.map((r) => (
